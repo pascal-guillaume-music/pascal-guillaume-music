@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibrations Résonances - Témoignages</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&family=Marck+Script&family=Birthstone&display=swap" rel="stylesheet">
+    <audio id="pageAudio" src="../audio/voix.mp3" preload="auto"></audio>
+</head>
+<body>
+    <header>
+        <nav>
+            <button class="burger-menu" aria-label="Menu">
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+            </button>
+            <ul class="nav-menu">
+                <a href="../index.html">
+                    <img src="../images/blanc.png" alt="Retour à l'accueil" class="back-button">
+                </a>
+                <li><a href="../vibrations-resonances.html">Accueil</a></li>
+                <li><a href="activite.html">Activité</a></li>
+                <li><a href="photos.html">Photos</a></li>
+                <li><a href="interventions.html">Interventions</a></li>
+                <li><a href="formation.html">Transmission</a></li>
+                <li><a href="experiences.html">Expériences</a></li>
+                <li><a href="parcours.html">Parcours</a></li>
+                <li><a href="temoignages.html" class="active">Témoignages</a></li>
+                <li><a href="instruments.html">Instruments</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="logo-container">
+            <div class="logo-left">
+                <img src="../images/logos/adapeila.png" alt="Logo Adapeila">
+
+            </div>
+            <h1 class="main-title">Vibrations Résonances</h1>
+            <button class="audio-control" id="playButton" aria-label="Jouer la musique"></button>
+        </div>
+    </header>
+    <main>
+        <section class="temoignages-content">
+            <div class="temoignages-intro">
+                <h1>Témoignages</h1>
+                <p>Découvrez les retours d'expérience des personnes ayant participé aux ateliers Vibrations Résonances.</p>
+            </div>
+
+            <div class="temoignages-grid">
+                <div class="temoignage-card">
+                    <button class="temoignage-btn">Etienne P.</button>
+                </div>
+
+                <div class="temoignage-card">
+                    <button class="temoignage-btn">Isabelle B.</button>
+                </div>
+
+                <div class="temoignage-card">
+                    <button class="temoignage-btn">Geneviève</button>
+                </div>
+
+                <div class="temoignage-card">
+                    <button class="temoignage-btn">Gwenaelle L.</button>
+                </div>
+
+                <div class="temoignage-card">
+                    <button class="temoignage-btn">Observations Isabelle B.</button>
+                </div>
+
+                <div class="temoignage-card">
+                    <button class="temoignage-btn">Clara</button>
+                </div>
+
+                <div class="temoignage-card">
+                    <button class="temoignage-btn">Elodie (Stagiaire)</button>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Vibrations Résonances. Tous droits réservés.</p>
+    </footer>
+
+    <div class="temoignage-modal" id="temoignageModal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <h2 class="modal-title"></h2>
+            <div class="modal-text"></div>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/temoignages.js"></script>
+</body>
+</html>
