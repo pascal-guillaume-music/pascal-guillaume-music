@@ -6,62 +6,13 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentSlide = 0;
     let mediaFiles = [];
 
-    // Scanner les dossiers pour trouver les médias
-    async function scanMediaDirectories() {
-        const mediaFiles = [];
-
-        // Extensions supportées
-        const imageExts = ['.jpg', '.jpeg', '.png'];
-        const videoExts = ['.mp4', '.webm'];
-        
-        // Fonction pour détecter le type de fichier
-        function getFileType(filename) {
-            const ext = filename.toLowerCase().substring(filename.lastIndexOf('.'));
-            if (imageExts.includes(ext)) return 'image';
-            if (videoExts.includes(ext)) return 'video';
-            return null;
-        }
-
-        try {
-            // Scan du dossier photos
-            const photosResponse = await fetch('clermont/photos/');
-            const photosText = await photosResponse.text();
-            const photosDoc = new DOMParser().parseFromString(photosText, 'text/html');
-            const photoLinks = Array.from(photosDoc.querySelectorAll('a'))
-                .map(a => a.href)
-                .filter(href => imageExts.some(ext => href.toLowerCase().endsWith(ext)));
-
-            // Scan du dossier vidéos
-            const videosResponse = await fetch('clermont/videos/');
-            const videosText = await videosResponse.text();
-            const videosDoc = new DOMParser().parseFromString(videosText, 'text/html');
-            const videoLinks = Array.from(videosDoc.querySelectorAll('a'))
-                .map(a => a.href)
-                .filter(href => videoExts.some(ext => href.toLowerCase().endsWith(ext)));
-
-            // Combiner les résultats
-            const allFiles = [...photoLinks, ...videoLinks].map(url => {
-                const path = new URL(url).pathname;
-                return {
-                    type: getFileType(path),
-                    src: path.substring(path.indexOf('clermont/'))
-                };
-            });
-
-            return allFiles;
-        } catch (error) {
-            console.error('Erreur lors du scan des dossiers:', error);
-            return [];
-        }
-    }
-
-    // Charger les médias
+    // Charger les fichiers média depuis le JSON
     async function loadMediaFiles() {
         try {
-            mediaFiles = await scanMediaDirectories();
-            if (mediaFiles.length === 0) {
-                throw new Error('Aucun média trouvé');
-            }
+            const response = await fetch('/clermont/media-files.json');
+            if (!response.ok) throw new Error('Erreur réseau');
+            const data = await response.json();
+            mediaFiles = data.mediaFiles;
             createCarouselItems();
         } catch (error) {
             console.error('Erreur lors du chargement des médias:', error);

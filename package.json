@@ -1,0 +1,9 @@
+{
+  "name": "pascal-guillaume-music",
+  "version": "1.0.0",
+  "description": "Site web de Pascal Guillaume",
+  "scripts": {
+    "build": "node scripts/update-media-files.js"
+  },
+  "dependencies": {}
+}
