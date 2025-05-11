@@ -4,30 +4,70 @@ document.addEventListener('DOMContentLoaded', function() {
     const prevButton = document.querySelector('.carousel-button.prev');
     const nextButton = document.querySelector('.carousel-button.next');
     let currentSlide = 0;
+    let mediaFiles = [];
 
-    // Liste des médias de Clermont
-    const mediaFiles = [
-        // Photos
-        { type: 'image', src: 'clermont/photos/20250412_195036.jpg' },
-        { type: 'image', src: 'clermont/photos/20250412_210141.jpg' },
-        { type: 'image', src: 'clermont/photos/20250412_210143.jpg' },
-        { type: 'image', src: 'clermont/photos/image00001.jpeg' },
-        { type: 'image', src: 'clermont/photos/image00002.jpeg' },
-        { type: 'image', src: 'clermont/photos/image00003.jpeg' },
-        { type: 'image', src: 'clermont/photos/image00004.jpeg' },
-        { type: 'image', src: 'clermont/photos/image00041.jpeg' },
-        { type: 'image', src: 'clermont/photos/image00042.jpeg' },
-        { type: 'image', src: 'clermont/photos/image00043.jpeg' },
-        { type: 'image', src: 'clermont/photos/image00044.jpeg' },
-        { type: 'image', src: 'clermont/photos/image00045.jpeg' },
-        // Vidéos
-        { type: 'video', src: 'clermont/videos/20250412_210641~2.mp4' },
-        { type: 'video', src: 'clermont/videos/20250412_211454~2.mp4' },
-        { type: 'video', src: 'clermont/videos/ANGELA JF~1.mp4' },
-        { type: 'video', src: 'clermont/videos/ANGELA VAL~1.mp4' },
-        { type: 'video', src: 'clermont/videos/AVEC DES FLEURS  VAL~1.mp4' },
-        { type: 'video', src: 'clermont/videos/JE SURVIVRAI JF~1.mp4' }
-    ];
+    // Scanner les dossiers pour trouver les médias
+    async function scanMediaDirectories() {
+        const mediaFiles = [];
+
+        // Extensions supportées
+        const imageExts = ['.jpg', '.jpeg', '.png'];
+        const videoExts = ['.mp4', '.webm'];
+        
+        // Fonction pour détecter le type de fichier
+        function getFileType(filename) {
+            const ext = filename.toLowerCase().substring(filename.lastIndexOf('.'));
+            if (imageExts.includes(ext)) return 'image';
+            if (videoExts.includes(ext)) return 'video';
+            return null;
+        }
+
+        try {
+            // Scan du dossier photos
+            const photosResponse = await fetch('clermont/photos/');
+            const photosText = await photosResponse.text();
+            const photosDoc = new DOMParser().parseFromString(photosText, 'text/html');
+            const photoLinks = Array.from(photosDoc.querySelectorAll('a'))
+                .map(a => a.href)
+                .filter(href => imageExts.some(ext => href.toLowerCase().endsWith(ext)));
+
+            // Scan du dossier vidéos
+            const videosResponse = await fetch('clermont/videos/');
+            const videosText = await videosResponse.text();
+            const videosDoc = new DOMParser().parseFromString(videosText, 'text/html');
+            const videoLinks = Array.from(videosDoc.querySelectorAll('a'))
+                .map(a => a.href)
+                .filter(href => videoExts.some(ext => href.toLowerCase().endsWith(ext)));
+
+            // Combiner les résultats
+            const allFiles = [...photoLinks, ...videoLinks].map(url => {
+                const path = new URL(url).pathname;
+                return {
+                    type: getFileType(path),
+                    src: path.substring(path.indexOf('clermont/'))
+                };
+            });
+
+            return allFiles;
+        } catch (error) {
+            console.error('Erreur lors du scan des dossiers:', error);
+            return [];
+        }
+    }
+
+    // Charger les médias
+    async function loadMediaFiles() {
+        try {
+            mediaFiles = await scanMediaDirectories();
+            if (mediaFiles.length === 0) {
+                throw new Error('Aucun média trouvé');
+            }
+            createCarouselItems();
+        } catch (error) {
+            console.error('Erreur lors du chargement des médias:', error);
+            carousel.innerHTML = '<div class="error-message">Impossible de charger la galerie</div>';
+        }
+    }
 
     // Créer les éléments du carrousel
     function createCarouselItems() {
@@ -139,5 +179,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Initialiser le carrousel
-    createCarouselItems();
+    loadMediaFiles();
 });
